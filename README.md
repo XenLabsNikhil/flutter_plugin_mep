@@ -1,21 +1,6 @@
-## Contents
+![moxo](https://assets-global.website-files.com/612ecbcc615e87b0b9b38524/62037243f5ede375a8705a34_Moxo-Website-Button.svg)
 
-- [Contents](#contents)
-- [Introduce](#introduce)
-  - [Supported Platforms](#supported-platforms)
-- [Preparation](#preparation)
-  - [Android](#android)
-  - [iOS](#ios)
-- [Installation](#installation)
-- [Initialization](#initialization)
-  - [Login](#login)
-  - [Show MEP window](#show-mep-window)
-- [Sample Code](#sample-code)
-  - [Open existing chat](#open-existing-chat)
-  - [Start meet](#start-meet)
-  - [Join meet](#join-meet)
-  - [Notification](#notification)
-- [API Doc](#api-doc)
+[ [Introduce](#introduce) &bull; [Preparation](#preparation) &bull; [Installation](#installation) &bull; [Initialization](#initialization) &bull; [Sample Code](#sample-code) &bull; [API Doc](#api-doc)]
 
 ## Introduce
 
@@ -240,4 +225,4 @@ FlutterPluginMep.joinMeet('1234567').catchError(handleError)
 
 ## API Doc
 
-[API doc](https://github.com/Moxtra/flutter_plugin_mep/blob/main/doc/api/index.html)
+[API doc](https://raw.githack.com/Moxtra/flutter_plugin_mep/main/doc/api/index.html)
