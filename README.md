@@ -225,4 +225,4 @@ FlutterPluginMep.joinMeet('1234567').catchError(handleError)
 
 ## API Doc
 
-[API doc](https://github.com/Moxtra/flutter_plugin_mep/blob/main/doc/api/index.html)
+[API doc](https://raw.githack.com/Moxtra/flutter_plugin_mep/main/doc/api/index.html)
