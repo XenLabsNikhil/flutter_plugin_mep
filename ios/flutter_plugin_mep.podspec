@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'MEPSDK', '~> 8.11.2'
   s.static_framework = true
-  s.platform = :ios, '12.0'
+  s.platform = :ios, '13.0'
   s.libraries = "c++", "xml2.2","z"
   # Flutter.framework does not contain a i386 slice.
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'}

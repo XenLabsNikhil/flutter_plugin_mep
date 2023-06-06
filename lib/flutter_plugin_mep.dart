@@ -39,8 +39,8 @@ class FlutterPluginMep {
 
   /// Start a meet with specific topic and members . Meeting screen will show up once meeting started succeed.
   /// [topic] Meet topic
-  /// [uniqueIds] Invited members
-  /// [chatId] Id of the chat where you want to place meeting related messages
+  /// [uniqueIds] Invited members, pass empty array will start meeting without any invitee
+  /// [chatId] Id of the chat where you want to place meeting related messages, empty chatId means no message needs to be placed.
   /// [options] Additional options when start a meeting, optional. Supported key-values list below:
   ///           {
   ///             "auto_join_audio": true,     //Boolean value, to join audio automaticaly or not, default is true.

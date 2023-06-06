@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 6.1.5">
+  <meta name="description" content="flutter_plugin_mep API docs, for the Dart programming language.">
+  <title>flutter_plugin_mep - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">flutter_plugin_mep package</li>
+  </ol>
+  <div class="self-name">flutter_plugin_mep</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h2 id="contents">Contents</h2>
+<ul>
+<li><a href="#contents">Contents</a></li>
+<li><a href="#introduce">Introduce</a>
+<ul>
+<li><a href="#supported-platforms">Supported Platforms</a></li>
+</ul>
+</li>
+<li><a href="#preparation">Preparation</a>
+<ul>
+<li><a href="#android">Android</a></li>
+<li><a href="#ios">iOS</a></li>
+</ul>
+</li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#initialization">Initialization</a>
+<ul>
+<li><a href="#login">Login</a></li>
+<li><a href="#show-mep-window">Show MEP window</a></li>
+</ul>
+</li>
+<li><a href="#sample-code">Sample Code</a>
+<ul>
+<li><a href="#open-existing-chat">Open existing chat</a></li>
+<li><a href="#start-meet">Start meet</a></li>
+<li><a href="#join-meet">Join meet</a></li>
+<li><a href="#notification">Notification</a></li>
+</ul>
+</li>
+<li><a href="#api-doc">API Doc</a></li>
+</ul>
+<h2 id="introduce">Introduce</h2>
+<p><strong>flutter_plugin_mep</strong> is a <a href="https://www.moxo.com/platform/sdks">moxo sdk</a> flutter wrapper. Provide Moxo OneStop capabilities to your mobile app built on <a href="https://flutter.dev/">Flutter</a></p>
+<h3 id="supported-platforms">Supported Platforms</h3>
+<ul>
+<li>iOS 13.0+</li>
+<li>Android</li>
+</ul>
+<h2 id="preparation">Preparation</h2>
+<p>Below sdk or tools are required before start to use flutter_plugin_mep.</p>
+<ul>
+<li>Flutter v3.7.10+</li>
+<li>Dart v2.19.6+</li>
+</ul>
+<h3 id="android">Android</h3>
+<ul>
+<li>Android Studio v14.1+</li>
+<li>Gradle ??</li>
+</ul>
+<h3 id="ios">iOS</h3>
+<ul>
+<li>Xcode v14.1+</li>
+<li>Cocoapod v1.11.0+</li>
+</ul>
+<p>For more flutter set up details, please ref to <a href="https://flutter.dev/docs/get-started/install">flutter official site</a></p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Add moxo flutter plugin to flutter project. Open pubspec.yml file in main project and add below in dependencies secion:</li>
+</ol>
+<pre class="language-dart"><code>dependencies:
+  ...
+  flutter_plugin_mep:
+      git:
+        url: git@github.com:Moxtra/flutter_plugin_mep.git
+      version: 8.11.2
+      #You can change version to latest one.
+</code></pre>
+<ol start="2">
+<li>Install added plugin:</li>
+</ol>
+<ul>
+<li>From the terminal, run:</li>
+</ul>
+<pre class="language-dart"><code>  flutter pub get.
+</code></pre>
+<ul>
+<li>From Android Studio/IntelliJ:</li>
+</ul>
+<pre class="language-dart"><code>    Click Packages get in the action ribbon at the top of pubspec.yaml.
+</code></pre>
+<ul>
+<li>From VS Code:</li>
+</ul>
+<pre class="language-dart"><code>    Click Get Packages located in right side of the action ribbon at the top of pubspec.yaml.
+</code></pre>
+<ol start="3">
+<li>iOS Specific Steps</li>
+</ol>
+<ul>
+<li>Add moxo cocoapod repo as source into Podfile under <code>./ios/Podfile</code>:</li>
+</ul>
+<pre class="language-dart"><code>source 'https://maven.moxtra.com/repo/moxtra-specs.git'
+</code></pre>
+<ul>
+<li>Change pod deployment platform to iOS 13+</li>
+</ul>
+<p>Sample:</p>
+<pre class="language-ruby"><code class="language-ruby">platform :ios, '13.0'
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+source 'https://maven.moxtra.com/repo/moxtra-specs.git'
+
+project 'Runner', {
+  'Debug' =&gt; :debug,
+  'Profile' =&gt; :release,
+  'Release' =&gt; :release,
+}
+
+# rest of the file...
+</code></pre>
+<h2 id="initialization">Initialization</h2>
+<h3 id="login">Login</h3>
+<p>Before login, we need to get access token, by Moxo RestAPI:</p>
+<pre class="language-dart"><code class="language-dart">//Requre dependency 'http'
+var domain = {your_domain};
+
+final response = await http.post(Uri.https(domain, 'v1/core/oauth/token'),
+    body: jsonEncode({
+      'client_id': {client_id},
+      'client_secret': {client_secret},
+      'org_id': {org_id},
+      'email': {email} 
+      //'unique_id': {unique_id}
+    }),
+    headers: {'Content-Type': 'application/json'});
+var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+var accessToken = decodedResponse['access_token'];
+</code></pre>
+<p>Import plugin before use, then initialize moxo sdk and login with access token:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:flutter_plugin_mep/flutter_plugin_mep.dart';
+//...
+//...
+FlutterPluginMep.setupDomain(domain);
+FlutterPluginMep.linkUserWithAccessToken(accessToken)
+  .then((response) =&gt; {
+        if (response != null &amp;&amp;
+            response is String &amp;&amp;
+            response == 'success')
+          {
+            //Login success.
+            FlutterPluginMep.showMEPWindow()
+          }
+      })
+  .catchError(handleError);
+</code></pre>
+<h3 id="show-mep-window">Show MEP window</h3>
+<p>After login successful, we can show MEP window directly.</p>
+<pre class="language-dart"><code class="language-dart">FlutterPluginMep.showMEPWindow()
+</code></pre>
+<h2 id="sample-code">Sample Code</h2>
+<h3 id="open-existing-chat">Open existing chat</h3>
+<p>If user is logged in, call open chat API to open existing chat. If not logged in or chat does not exists, API will return error with error code and error message.</p>
+<pre class="language-dart"><code class="language-dart">FlutterPluginMep.openChat('CBSmiUUjyIJP7gR8YIpiagvH', '')
+</code></pre>
+<h3 id="start-meet">Start meet</h3>
+<p>If user is logged in, call start meet API to start an instant meet. If start successful, meet UI will show directly, otherwise, error will be returned with error code and error message.</p>
+<pre class="language-dart"><code class="language-dart">var attendeesUniqueIds = ['john001','smith002','ella003'];
+FlutterPluginMep.startMeet(
+        "Your meeting topic",
+        attendeesUniqueIds,
+        'CBSmiUUjyIJP7gR8YIpiagvH',
+        {
+         'auto_join_audio': true,
+         'auto_join_video': false
+        })
+    .catchError(handleError)
+</code></pre>
+<h3 id="join-meet">Join meet</h3>
+<p>If user is logged in, call join meet API to join an instant meet. If join successful, meet UI will show directly, otherwise, error will be returned with error code and error message.</p>
+<pre class="language-dart"><code class="language-dart">FlutterPluginMep.joinMeet('1234567').catchError(handleError)
+</code></pre>
+<h3 id="notification">Notification</h3>
+<ol>
+<li>Register token, here we use <a href="https://firebase.google.com/docs/cloud-messaging">Firebase Cloud Messaging</a> for example, for how to integrate firebase cloud messaging in Flutter, please refer <a href="https://firebase.google.com/docs/cloud-messaging/flutter/client">official doc</a></li>
+</ol>
+<pre class="language-dart"><code class="language-dart">    //Get token via firebase messaging
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+        token = await FirebaseMessaging.instance.getAPNSToken();
+    } else if(defaultTargetPlatform == TargetPlatform.android) {
+        token = await FirebaseMessaging.instance.getToken();
+    }
+
+    //Register token to moxo
+    var response = await FlutterPluginMep.registerNotification(
+        token);
+    if (response != null &amp;&amp;
+        response is String &amp;&amp;
+        response == 'success') {
+    print("register token success");
+    }
+</code></pre>
+<ol start="2">
+<li>Parse Notification payload</li>
+</ol>
+<pre class="language-dart"><code class="language-dart">  //For example, parse notificaion when after app launch
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+    print('Got a message whilst in the background!');
+    print('Message data: ${message.data}');
+    if (message.notification != null) {
+      try {
+        var response = await FlutterPluginMep.parseRemoteNotification(
+            json.encode(message.data));
+        print(response);
+        //response is a map, includes 'chat_id' or 'meet_id', we could do more actions based on the parse result:
+        var chatId = response['chat_id'];
+        var feed_sequence = response['feed_sequence'];
+        FlutterPluginMep.openChat(chatId as String, feed_sequence as String);
+      } catch (e) {
+        print(e);
+      }
+    }
+  });
+</code></pre>
+<h2 id="api-doc">API Doc</h2>
+<p><a href="https://github.com/Moxtra/flutter_plugin_mep/blob/main/doc/api/index.html">API doc</a></p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="flutter_plugin_mep">
+  <span class="name"><a href="flutter_plugin_mep/flutter_plugin_mep-library.html">flutter_plugin_mep</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li class="self-crumb">flutter_plugin_mep package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">flutter_plugin_mep</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="flutter_plugin_mep/flutter_plugin_mep-library.html">flutter_plugin_mep</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_plugin_mep
+      8.11.2
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
