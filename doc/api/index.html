@@ -49,43 +49,14 @@
   <div id="dartdoc-main-content" class="main-content">
       
 <section class="desc markdown">
-  <h2 id="contents">Contents</h2>
-<ul>
-<li><a href="#contents">Contents</a></li>
-<li><a href="#introduce">Introduce</a>
-<ul>
-<li><a href="#supported-platforms">Supported Platforms</a></li>
-</ul>
-</li>
-<li><a href="#preparation">Preparation</a>
-<ul>
-<li><a href="#android">Android</a></li>
-<li><a href="#ios">iOS</a></li>
-</ul>
-</li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#initialization">Initialization</a>
-<ul>
-<li><a href="#login">Login</a></li>
-<li><a href="#show-mep-window">Show MEP window</a></li>
-</ul>
-</li>
-<li><a href="#sample-code">Sample Code</a>
-<ul>
-<li><a href="#open-existing-chat">Open existing chat</a></li>
-<li><a href="#start-meet">Start meet</a></li>
-<li><a href="#join-meet">Join meet</a></li>
-<li><a href="#notification">Notification</a></li>
-</ul>
-</li>
-<li><a href="#api-doc">API Doc</a></li>
-</ul>
+  <p><img src="https://assets-global.website-files.com/612ecbcc615e87b0b9b38524/62037243f5ede375a8705a34_Moxo-Website-Button.svg" alt="moxo"></p>
+<p>[ <a href="#introduce">Introduce</a> • <a href="#preparation">Preparation</a> • <a href="#installation">Installation</a> • <a href="#initialization">Initialization</a> • <a href="#sample-code">Sample Code</a> • <a href="#api-doc">API Doc</a>]</p>
 <h2 id="introduce">Introduce</h2>
 <p><strong>flutter_plugin_mep</strong> is a <a href="https://www.moxo.com/platform/sdks">moxo sdk</a> flutter wrapper. Provide Moxo OneStop capabilities to your mobile app built on <a href="https://flutter.dev/">Flutter</a></p>
 <h3 id="supported-platforms">Supported Platforms</h3>
 <ul>
 <li>iOS 13.0+</li>
-<li>Android</li>
+<li>Android 4.4+</li>
 </ul>
 <h2 id="preparation">Preparation</h2>
 <p>Below sdk or tools are required before start to use flutter_plugin_mep.</p>
@@ -95,8 +66,8 @@
 </ul>
 <h3 id="android">Android</h3>
 <ul>
-<li>Android Studio v14.1+</li>
-<li>Gradle ??</li>
+<li>Android Studio</li>
+<li>Android SDK v19+</li>
 </ul>
 <h3 id="ios">iOS</h3>
 <ul>
@@ -199,6 +170,9 @@ FlutterPluginMep.linkUserWithAccessToken(accessToken)
 <p>After login successful, we can show MEP window directly.</p>
 <pre class="language-dart"><code class="language-dart">FlutterPluginMep.showMEPWindow()
 </code></pre>
+<p>or if you expecting just a timeline view instead of full mep window:</p>
+<pre class="language-dart"><code class="language-dart">FlutterPluginMep.showMEPWindowLite()
+</code></pre>
 <h2 id="sample-code">Sample Code</h2>
 <h3 id="open-existing-chat">Open existing chat</h3>
 <p>If user is logged in, call open chat API to open existing chat. If not logged in or chat does not exists, API will return error with error code and error message.</p>
@@ -264,7 +238,7 @@ FlutterPluginMep.startMeet(
   });
 </code></pre>
 <h2 id="api-doc">API Doc</h2>
-<p><a href="https://github.com/Moxtra/flutter_plugin_mep/blob/main/doc/api/index.html">API doc</a></p>
+<p><a href="https://htmlpreview.github.io/?https://github.com/Moxtra/flutter_plugin_mep/blob/main/doc/api/index.html">API doc</a></p>
 </section>
 
 
@@ -272,7 +246,7 @@ FlutterPluginMep.startMeet(
           <h2>Libraries</h2>
         <dl>
           <dt id="flutter_plugin_mep">
-  <span class="name"><a href="flutter_plugin_mep/flutter_plugin_mep-library.html">flutter_plugin_mep</a></span> 
+  <span class="name"><a href="file-___Users_john.hu_Documents_Code_plugin_branches_8.3_flutter_plugin_mep_lib_flutter_plugin_mep/file-___Users_john.hu_Documents_Code_plugin_branches_8.3_flutter_plugin_mep_lib_flutter_plugin_mep-library.html">flutter_plugin_mep</a></span> 
 
 </dt>
 <dd>
@@ -298,7 +272,7 @@ FlutterPluginMep.startMeet(
     <h5 class="hidden-xs"><span class="package-name">flutter_plugin_mep</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
-      <li><a href="flutter_plugin_mep/flutter_plugin_mep-library.html">flutter_plugin_mep</a></li>
+      <li><a href="file-___Users_john.hu_Documents_Code_plugin_branches_8.3_flutter_plugin_mep_lib_flutter_plugin_mep/file-___Users_john.hu_Documents_Code_plugin_branches_8.3_flutter_plugin_mep_lib_flutter_plugin_mep-library.html">flutter_plugin_mep</a></li>
 </ol>
 
   </div>
@@ -311,7 +285,7 @@ FlutterPluginMep.startMeet(
 <footer>
   <span class="no-break">
     flutter_plugin_mep
-      8.11.2
+      8.16.12
   </span>
 
   

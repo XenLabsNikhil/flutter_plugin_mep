@@ -387,11 +387,11 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
         if (isLocalUnlink) {
-            Log.d(TAG, "unlink called ...")
-            MEPClient.unlink(callback)
-        } else {
             Log.d(TAG, "localUnlink called ...")
             MEPClient.localUnlink(callback)
+        } else {
+            Log.d(TAG, "unlink called ...")
+            MEPClient.unlink(callback)
         }
     }
 
@@ -400,7 +400,7 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
     private fun setFeatureConfig(@NonNull call: MethodCall, @NonNull result: Result) {
         var parameters = call.arguments
         if (parameters != null && parameters is List<*> && parameters.size > 0) {
-            var featureConfigs = parameters.get(0) as Map<String, Object>
+            var featureConfigs = parameters[0] as Map<String, Object>
             var keyset = featureConfigs?.keys
             if (keyset != null) {
                 for (key in keyset) {
