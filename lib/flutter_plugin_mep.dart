@@ -30,6 +30,22 @@ class FlutterPluginMep {
     _channel.invokeMethod('showMEPWindow');
   }
 
+  /// Show mep main window lite (only contains timeline view)
+  static void showMEPWindowLite() {
+    _channel.invokeMethod('showMEPWindowLite');
+  }
+
+  /// Enable/disable client features.
+  /// Below are supported key-value for features.
+  ///
+  /// Feature                           Key(String)                        Value
+  /// Hide Inactive Relation Chat       hide_inactive_relation_chat        true/false in type Boolean
+  ///
+  /// [featureConfigs] feature config map.
+  static void setFeatureConfig(Map<String, Object> featureConfigs) {
+    _channel.invokeMethod("setFeatureConfig", [featureConfigs]);
+  }
+
   /// Open chat with chat ID [chatId] and scroll to the specified feed [feedSequence] if present.
   /// [chatId] chat id.
   /// [feedSequence] feed id. If you need to jump to specific feed, pass feed id, else pass empty.

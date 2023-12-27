@@ -143,6 +143,11 @@ After login successful, we can show MEP window directly.
 FlutterPluginMep.showMEPWindow()
 ```
 
+or if you expecting just a timeline view instead of full mep window:
+```dart
+FlutterPluginMep.showMEPWindowLite()
+```
+
 ## Sample Code
 
 ### Open existing chat

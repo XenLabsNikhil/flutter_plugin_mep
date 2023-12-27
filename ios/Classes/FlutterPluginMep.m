@@ -47,6 +47,11 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
   } else if ([@"showMEPWindow" isEqualToString:call.method]) {
     [[MEPClient sharedInstance] showMEPWindow];
     result(nil);
+  } else if ([@"showMEPWindowLite" isEqualToString:call.method]) {
+    [[MEPClient sharedInstance] showMEPWindowLite];
+    result(nil);
+  } else if ([@"setFeatureConfig" isEqualToString:call.method]) {
+    [self setFeatureConfig:call result:result];
   } else if ([@"openChat" isEqualToString:call.method]) {
       if ([call.arguments isKindOfClass:[NSArray class]]) {
           NSArray *arguments = (NSArray *)call.arguments;
@@ -168,8 +173,20 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
 }
 
 #pragma mark - MEPClientDelegate
-
-#pragma mark - Helper 
+#pragma mark -
+- (void)setFeatureConfig:(FlutterMethodCall *)call result:(FlutterResult)result {
+    if ([call.arguments isKindOfClass:[NSArray class]]) {
+        NSArray *configsArr = (NSArray *)call.arguments;
+        if (configsArr.count > 0) {
+            NSDictionary *configs = configsArr.firstObject;
+            if ([configs objectForKey:@"hide_inactive_relation_chat"]) {
+                [MEPFeatureConfig sharedInstance].hidesInactiveRelationChats = [[configs objectForKey:@"hide_inactive_relation_chat"] boolValue];
+            }
+        }
+    }
+    result(nil);
+}
+#pragma mark - Helper
 - (NSData *)dataFromHexString:(NSString *)string
 {
     NSMutableData *stringData = [[NSMutableData alloc] init];
