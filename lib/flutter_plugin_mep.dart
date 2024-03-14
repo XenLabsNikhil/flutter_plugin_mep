@@ -15,6 +15,16 @@ class FlutterPluginMep {
     _channel.invokeMethod('setupDomain', [domain]);
   }
 
+  /// Check if moxo linked
+  static Future<bool> isLinked() async {
+    try {
+      var ret = await _channel.invokeMethod('isLinked');
+      return ret;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// Link user with access token.
   /// [token] user access token.
   static Future<dynamic> linkUserWithAccessToken(String token) async {
@@ -28,6 +38,29 @@ class FlutterPluginMep {
   /// Show mep main window.
   static void showMEPWindow() {
     _channel.invokeMethod('showMEPWindow');
+  }
+
+  /// Show mep main window lite (only contains timeline view)
+  static void showMEPWindowLite() {
+    _channel.invokeMethod('showMEPWindowLite');
+  }
+
+  /// Enable/disable client features.
+  /// Below are supported key-value for features.
+  /// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+  /// ┃Feature                     ┃Key(String)                  ┃Value       ┃
+  /// ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━┫
+  /// ┃Hide Inactive Relation Chat ┃hide_inactive_relation_chat  ┃true/false  ┃
+  /// ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━┫
+  /// ┃Enable/Disable Pushkit      ┃enable_pushkit               ┃true/false  ┃
+  /// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━┛
+  /// @discussion
+  /// #1 For enable_pushkit: it is iOS only, enable it will bring system call experience when receiving a moxo meeting, refer
+  /// https://developer.apple.com/documentation/pushkit for more.
+  /// And enable it will auto log in last success logged in Moxo user, it is to make sure call works when app wake from deactivated state.
+  /// [featureConfigs] feature config map.
+  static void setFeatureConfig(Map<String, Object> featureConfigs) {
+    _channel.invokeMethod("setFeatureConfig", [featureConfigs]);
   }
 
   /// Open chat with chat ID [chatId] and scroll to the specified feed [feedSequence] if present.

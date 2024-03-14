@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.annotation.NonNull
-import com.moxtra.binder.ui.util.StringUtils
+import com.moxtra.mepsdk.FeatureConfig
 import com.moxtra.mepsdk.MEPClient
 import com.moxtra.sdk.common.ApiCallback
 
@@ -17,6 +17,7 @@ import org.json.JSONObject
 
 import org.json.JSONArray
 import com.moxtra.mepsdk.data.MEPStartMeetOptions
+import ext.org.apache.commons.lang3.StringUtils
 import org.json.JSONException
 
 
@@ -71,6 +72,15 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
             "localUnlink" -> {
                 unlink(call, result, true)
             }
+            "showMEPWindowLite" -> {
+                showMEPWindowLite(call, result)
+            }
+            "setFeatureConfig" -> {
+                setFeatureConfig(call, result)
+            }
+            "isLinked" -> {
+                isLinked(call, result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -103,7 +113,7 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
         var parameters = call.arguments;
         if (parameters != null && parameters is List<*>) {
             var token: String = parameters.get(0) as String
-            MEPClient.registerNotification(token, object : ApiCallback<Void> {
+            MEPClient.registerNotification(token, null, null, null, object : ApiCallback<Void> {
                 override fun onCompleted(rlt: Void?) {
                     result.success("success")
                 }
@@ -204,6 +214,15 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
         if (MEPClient.isLinked()) {
             Log.d(TAG, "MEP is linked and showMEPWindow...")
             MEPClient.showMEPWindow(mFlutterPluginMepPlugin.applicationContext)
+        }
+    }
+
+
+    private fun showMEPWindowLite(@NonNull call: MethodCall, @NonNull result: Result) {
+        Log.d(TAG, "showMEPWindowLite called...")
+        if (MEPClient.isLinked()) {
+            Log.d(TAG, "MEP is linked and showMEPWindowLite...")
+            MEPClient.showMEPWindowLite(mFlutterPluginMepPlugin.applicationContext)
         }
     }
 
@@ -371,19 +390,47 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
         if (isLocalUnlink) {
-            Log.d(TAG, "unlink called ...")
-            MEPClient.unlink(callback)
-        } else {
             Log.d(TAG, "localUnlink called ...")
             MEPClient.localUnlink(callback)
+        } else {
+            Log.d(TAG, "unlink called ...")
+            MEPClient.unlink(callback)
         }
     }
 
+    // Feature-key-value
+    // Hide Inactive Relation Chat       hide_inactive_relation_chat        true/false in type Boolean
+    private fun setFeatureConfig(@NonNull call: MethodCall, @NonNull result: Result) {
+        var parameters = call.arguments
+        if (parameters != null && parameters is List<*> && parameters.size > 0) {
+            var featureConfigs = parameters[0] as Map<String, Object>
+            var keyset = featureConfigs?.keys
+            if (keyset != null) {
+                for (key in keyset) {
+                    when (key) {
+                        "hide_inactive_relation_chat" -> {
+                            (featureConfigs[key] as? Boolean)?.let {
+                                FeatureConfig.hideInactiveRelationChat(
+                                    it
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isLinked(@NonNull call: MethodCall, @NonNull result: Result) {
+        val isLinked: Boolean = MEPClient.isLinked()
+        result.success(isLinked)
+    }
+
     private fun json2Intent(jsonObject: JSONObject?): Intent {
-        var intent = Intent()
-        var keys = jsonObject?.keys();
+        val intent = Intent()
+        val keys = jsonObject?.keys();
         while (keys?.hasNext() == true) {
-            var key = keys.next()
+            val key = keys.next()
             intent.putExtra(key, jsonObject?.getString(key))
         }
         return intent
