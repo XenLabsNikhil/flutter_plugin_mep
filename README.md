@@ -25,7 +25,7 @@ Below sdk or tools are required before start to use flutter_plugin_mep.
 
 ### iOS
 
-* Xcode v14.1+
+* Xcode v15.0+
 * Cocoapod v1.11.0+
 
 For more flutter set up details, please ref to [flutter official site](https://flutter.dev/docs/get-started/install)

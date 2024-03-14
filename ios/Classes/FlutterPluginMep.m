@@ -5,48 +5,62 @@ const static NSString *autoJoinAudioKey = @"auto_join_audio";
 const static NSString *autoStartVideoKey = @"auto_start_video";
 
 @interface FlutterPluginMep()<MEPClientDelegate>
+@property (nonatomic, assign) NSString *domain;
 @property (nonatomic, strong) FlutterMethodChannel *channel;
 @end
 @implementation FlutterPluginMep
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
+    FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"flutter_plugin_mep"
             binaryMessenger:[registrar messenger]];
-  FlutterPluginMep* instance = [[FlutterPluginMep alloc] init];
-  [MEPClient sharedInstance].delegate = instance;
-  instance.channel = channel;
-  [registrar addMethodCallDelegate:instance channel:channel];
+    FlutterPluginMep* instance = [[FlutterPluginMep alloc] init];
+    [MEPClient sharedInstance].delegate = instance;
+    instance.channel = channel;
+    //Reset up domain if needed
+    [instance resetDomain];
+    [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else if ([@"setupDomain" isEqualToString:call.method]) {
-      if ([call.arguments isKindOfClass:[NSArray class]]) {
-          NSArray *arguments = (NSArray *)call.arguments;
-          NSString *domain = arguments[0];
-          [[MEPClient sharedInstance] setupWithDomain:domain linkConfig:nil];
-          result(nil);
-      } else {
-          result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
-      }
-  } else if ([@"linkUserWithAccessToken" isEqualToString:call.method]) {
-      if ([call.arguments isKindOfClass:[NSArray class]]) {
-          NSArray *arguments = (NSArray *)call.arguments;
-          NSString *token = arguments[0];
-          [[MEPClient sharedInstance] linkUserWithAccessToken:token completionHandler:^(NSError * _Nullable errorOrNil) {
-              if (errorOrNil) {
-                  result([self errorFromNSError:errorOrNil]);
-              } else {
-                  result(@"success");
-              }
-          }];
-      } else {
-          result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
-      }
-  } else if ([@"showMEPWindow" isEqualToString:call.method]) {
-    [[MEPClient sharedInstance] showMEPWindow];
+    if ([@"getPlatformVersion" isEqualToString:call.method]) {
+        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+    } else if ([@"setupDomain" isEqualToString:call.method]) {
+        if ([call.arguments isKindOfClass:[NSArray class]]) {
+            NSArray *arguments = (NSArray *)call.arguments;
+            NSString *domain = arguments[0];
+            self.domain = domain;
+            [[MEPClient sharedInstance] setupWithDomain:domain linkConfig:nil];
+            result(nil);
+        } else {
+            result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
+        }
+    } else if ([@"isLinked" isEqualToString:call.method]) {
+        BOOL ret = [[MEPClient sharedInstance] isLinked];
+        result(@(ret));
+    } else if ([@"linkUserWithAccessToken" isEqualToString:call.method]) {
+        if ([call.arguments isKindOfClass:[NSArray class]]) {
+            NSArray *arguments = (NSArray *)call.arguments;
+            NSString *token = arguments[0];
+            [[MEPClient sharedInstance] linkUserWithAccessToken:token completionHandler:^(NSError * _Nullable errorOrNil) {
+                if (errorOrNil) {
+                    result([self errorFromNSError:errorOrNil]);
+                } else {
+                    //Save last user domain if pushkit enabled
+                    [self saveDomain];
+                    result(@"success");
+                }
+            }];
+        } else {
+            result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
+        }
+    }   else if ([@"showMEPWindow" isEqualToString:call.method]) {
+        [[MEPClient sharedInstance] showMEPWindow];
     result(nil);
+  } else if ([@"showMEPWindowLite" isEqualToString:call.method]) {
+    [[MEPClient sharedInstance] showMEPWindowLite];
+    result(nil);
+  } else if ([@"setFeatureConfig" isEqualToString:call.method]) {
+    [self setFeatureConfig:call result:result];
   } else if ([@"openChat" isEqualToString:call.method]) {
       if ([call.arguments isKindOfClass:[NSArray class]]) {
           NSArray *arguments = (NSArray *)call.arguments;
@@ -65,7 +79,7 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
       } else {
           result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
       }
-  } else if ([@"startMeet" isEqualToString:call.method]) {
+    } else if ([@"startMeet" isEqualToString:call.method]) {
       if ([call.arguments isKindOfClass:[NSArray class]]) {
           NSString *topic = [call.arguments objectAtIndex:0];
           NSArray *unique_ids = [call.arguments objectAtIndex:1];
@@ -94,29 +108,29 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
               }
           }];
       }
-  } else if ([@"joinMeet" isEqualToString:call.method]) {
-      if ([call.arguments isKindOfClass:[NSArray class]]) {
-        NSString *session_id = [call.arguments objectAtIndex:0];
-        if (![MEPClient sharedInstance].isLinked) {
-            result([FlutterError errorWithCode:@"3" message:@"not linked yet" details:nil]);
-            return;
-        }
-        [[MEPClient sharedInstance] joinMeetWithMeetID:session_id completionHandler:^(NSError * _Nullable errorOrNil) {
-            if (errorOrNil) {
-                result([self errorFromNSError:errorOrNil]);
-            } else {
-                result(@"success");
+    } else if ([@"joinMeet" isEqualToString:call.method]) {
+        if ([call.arguments isKindOfClass:[NSArray class]]) {
+            NSString *session_id = [call.arguments objectAtIndex:0];
+            if (![MEPClient sharedInstance].isLinked) {
+                result([FlutterError errorWithCode:@"3" message:@"not linked yet" details:nil]);
+                return;
             }
-        }];
-    } else {
-        result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
-    }
-  } else if ([@"registerNotification" isEqualToString:call.method]) {
+            [[MEPClient sharedInstance] joinMeetWithMeetID:session_id completionHandler:^(NSError * _Nullable errorOrNil) {
+                if (errorOrNil) {
+                    result([self errorFromNSError:errorOrNil]);
+                } else {
+                    result(@"success");
+                }
+            }];
+        } else {
+            result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
+        }
+    } else if ([@"registerNotification" isEqualToString:call.method]) {
       if ([call.arguments isKindOfClass:[NSArray class]]) {
         NSString *deviceToken = [call.arguments objectAtIndex:0];
         if ([deviceToken isEqual:[NSNull null]])
             deviceToken = @"";
-    
+
         NSData *tokenData = [self dataFromHexString:deviceToken];
           [[MEPClient sharedInstance] registerNotificationWithDeviceToken:tokenData completionHandler:^(NSError * _Nullable error) {
               if (error) {
@@ -128,7 +142,7 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
     } else {
         result([FlutterError errorWithCode:MEPFunctionBadRequestCode message:@"parameter not found" details:nil]);
     }
-  } else if ([@"parseRemoteNotification" isEqualToString:call.method]) {
+    } else if ([@"parseRemoteNotification" isEqualToString:call.method]) {
       if ([call.arguments isKindOfClass:[NSArray class]]) {
           NSString *payload = [call.arguments objectAtIndex:0];
           if ([payload isEqual:[NSNull null]]) {
@@ -149,15 +163,15 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
               }];
           }
       }
-  } else if ([@"localUnlink" isEqualToString:call.method]) {
+    } else if ([@"localUnlink" isEqualToString:call.method]) {
       [[MEPClient sharedInstance] localUnlink];
       result(nil);
-  } else if ([@"unlink" isEqualToString:call.method]) {
+    } else if ([@"unlink" isEqualToString:call.method]) {
       [[MEPClient sharedInstance] unlink];
       result(nil);
-  } else {
+    } else {
         result(FlutterMethodNotImplemented);
-  }
+    }
 }
 
 - (FlutterError *)errorFromNSError:(NSError *)error {
@@ -168,8 +182,25 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
 }
 
 #pragma mark - MEPClientDelegate
-
-#pragma mark - Helper 
+#pragma mark -
+- (void)setFeatureConfig:(FlutterMethodCall *)call result:(FlutterResult)result {
+    if ([call.arguments isKindOfClass:[NSArray class]]) {
+        NSArray *configsArr = (NSArray *)call.arguments;
+        if (configsArr.count > 0) {
+            NSDictionary *configs = configsArr.firstObject;
+            if ([configs objectForKey:@"hide_inactive_relation_chat"]) {
+                [MEPFeatureConfig sharedInstance].hidesInactiveRelationChats = [[configs objectForKey:@"hide_inactive_relation_chat"] boolValue];
+            }
+            if ([configs objectForKey:@"enable_pushkit"]) {
+                [MEPFeatureConfig sharedInstance].pushKitEnabled = [[configs objectForKey:@"enable_pushkit"] boolValue];
+                if ([MEPFeatureConfig sharedInstance].pushKitEnabled && self.domain.length)
+                    [self saveDomain];
+            }
+        }
+    }
+    result(nil);
+}
+#pragma mark - Helper
 - (NSData *)dataFromHexString:(NSString *)string
 {
     NSMutableData *stringData = [[NSMutableData alloc] init];
@@ -183,6 +214,26 @@ const static NSString *autoStartVideoKey = @"auto_start_video";
         [stringData appendBytes:&whole_byte length:1];
     }
     return stringData;
+}
+
+- (void)saveDomain
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([MEPFeatureConfig sharedInstance].pushKitEnabled && self.domain.length) {
+        [defaults setObject:self.domain forKey:@"MoxoFlutterLastUserDomain"];
+        [defaults synchronize];
+    }
+}
+
+- (void)resetDomain
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([MEPFeatureConfig sharedInstance].pushKitEnabled) {
+        if ([defaults objectForKey:@"MoxoFlutterLastUserDomain"] != nil) {
+            NSString *domain = [defaults objectForKey:@"MoxoFlutterLastUserDomain"];
+            [[MEPClient sharedInstance] setupWithDomain:domain linkConfig:nil];
+        }
+    }
 }
 
 @end
