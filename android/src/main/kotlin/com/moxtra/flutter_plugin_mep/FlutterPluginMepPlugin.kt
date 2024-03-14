@@ -78,6 +78,9 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
             "setFeatureConfig" -> {
                 setFeatureConfig(call, result)
             }
+            "isLinked" -> {
+                isLinked(call, result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -406,7 +409,7 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
                 for (key in keyset) {
                     when (key) {
                         "hide_inactive_relation_chat" -> {
-                            (featureConfigs.get(key) as? Boolean)?.let {
+                            (featureConfigs[key] as? Boolean)?.let {
                                 FeatureConfig.hideInactiveRelationChat(
                                     it
                                 )
@@ -418,11 +421,16 @@ class FlutterPluginMepPlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
+    private fun isLinked(@NonNull call: MethodCall, @NonNull result: Result) {
+        val isLinked: Boolean = MEPClient.isLinked()
+        result.success(isLinked)
+    }
+
     private fun json2Intent(jsonObject: JSONObject?): Intent {
-        var intent = Intent()
-        var keys = jsonObject?.keys();
+        val intent = Intent()
+        val keys = jsonObject?.keys();
         while (keys?.hasNext() == true) {
-            var key = keys.next()
+            val key = keys.next()
             intent.putExtra(key, jsonObject?.getString(key))
         }
         return intent
